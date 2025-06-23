@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Página Inicial - Meu Site{% endblock %}
+{% load static %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        Upload de pedidos
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Selecione o arquivo xlsx</h5>
+
+        <form method="post" enctype="multipart/form-data" class="row g-3">
+            {% csrf_token %}
+            <div class="col-auto">
+            {{ form.as_p }}
+			</div>
+            <div class="col-auto">
+            <br>
+            <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+{% if orders.errors %}
+{% for error in orders.errors %}
+<div class="alert alert-danger" role="alert">
+    {{ error.message }}
+    <a href="{{ error.url }}" target="admin">corrigir</a>
+</div>
+{% endfor %}
+{% elif orders.orders%}
+<div class="alert alert-success" role="alert">
+    {{ orders.orders | length}} Itens importados com sucesso
+</div>
+{% endif %}
+<div class=container>
+    
+    <br>
+    
+    {% if orders.orders%}
+    <table class="table">
+        <thead class="table-light">
+            <tr>
+                <th scope="row">Número do Pedido</th>
+                <th scope="row">Cliente</th>
+                <th scope="row">Agenda</th>
+                <th>Itens</th>
+            </tr>
+        </thead>
+        </tbody>
+            {% for order in orders.orders%}
+            <tr>
+                <td scope="row">{{order.order_num}}</td>
+                <td>{{order.customer_name}}</td>
+                
+                <td> {{order.delivery_date}} - {{order.delivery_time}}</td>
+                <td>
+                    <ul>
+                        
+                {% for item in order.items %}
+                <li>{{item.quantity}} X {{item.product.name}}
+                    <ul>
+                        {% for selection in item.flavors%}
+                        <li>{{selection.quantity}} X {{selection.flavor.name}}</li>
+                        {%endfor%}
+                    </ul>
+                </li>
+                {% endfor%}
+                <ul>
+                </td>
+            </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+
+    {% endif %}
+</div>
+
+{% endblock %}

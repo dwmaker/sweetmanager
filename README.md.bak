@@ -1,0 +1,331 @@
+# Sweet Manager
+
+O Sweet Manager é o seu novo aliado essencial na cozinha, projetado especificamente para confeiteiras que buscam otimizar cada etapa da produção. Com ele, você transforma a complexidade da gestão de insumos e pedidos em um processo simples e intuitivo. Diga adeus às incertezas sobre quanto comprar de chantilly ou quantos bolos preparar na semana; o Sweet Manager organiza suas receitas, controla seu estoque de ingredientes e dimensiona a produção com base na demanda real dos seus pedidos, garantindo que você tenha sempre o necessário, sem desperdícios, e com o custo da sua produção sempre à mão. Ele é a ferramenta que te dá a precisão e o controle que você precisa para focar no que faz de melhor: criar doces incríveis.
+
+## Entidades
+
+Documentação Funcional das Entidades do Aplicativo 
+
+### Unidade
+
+Padronizar as grandezas para ingredientes e receitas, garantindo que todas as medições sejam consistentes e que as conversões (gramas para quilos, mililitros para litros) sejam precisas. Essencial para o cálculo correto de insumos e rendimentos.
+
+*Atributos*
+
+- Código (Chave Primária)
+  Tipo: Texto
+  Descrição: Identificador único da unidade (ex: GR, KG, ML, L, UN, PCT).
+
+- Nome
+  Tipo: Texto
+  Descrição: Nome completo da unidade (ex: Gramas, Quilogramas, Mililitros, Litros, Unidade, Pacote).
+
+- Tipo de Unidade
+  Tipo: Texto
+  Descrição: Classificação da unidade para facilitar validações e conversões (ex: Peso, Volume, Contagem).
+
+### Ingrediente
+
+Gerenciar os componentes brutos das receitas. Permite rastrear o estoque, calcular custos e planejar compras de forma eficiente.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único do ingrediente.
+
+- Nome
+  Tipo: Texto
+  Descrição: Nome descritivo do ingrediente (ex: Açúcar Refinado, Farinha de Trigo Tipo 1, Chocolate em Pó 50% Cacau).
+
+- Origem
+  Tipo: Enumeração ("Comprado", "Manufaturado")
+  Descrição: Indica se o ingrediente é comprado de fornecedor ou produzido internamente (manufaturado).
+
+- Receita (Chave Estrangeira, obrigatório se Origem = Manufaturado)
+  Tipo: Referência para Receita
+  Descrição: Receita utilizada para produzir o ingrediente manufaturado. Herdar unidade e rendimento da receita.
+
+- Unidade Padrão de Compra
+  Tipo: Referência para Unidade (habilitado apenas se Origem = Comprado)
+  Descrição: A unidade em que o ingrediente é normalmente adquirido do fornecedor (ex: KG, L, UN).
+
+- Preço Unitário de Compra
+  Tipo: Numérico (Monetário, habilitado apenas se Origem = Comprado)
+  Descrição: O preço por uma unidade padrão de compra do ingrediente. Permite calcular o custo de cada receita e produto.
+
+- Estoque Atual
+  Tipo: Numérico
+  Descrição: A quantidade disponível do ingrediente no momento, expressa na Unidade Padrão de Compra.
+
+### Receita
+
+Definir os modos de preparo e a composição de produtos intermediários ou finais. É a base para o cálculo de rendimento, custo e a demanda de ingredientes.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único da receita.
+
+- Nome
+  Tipo: Texto
+  Descrição: Nome da receita (ex: Massa de Bolo de Baunilha, Recheio Brigadeiro Tradicional, Chantilly Estabilizado).
+
+- Rendimento
+  Tipo: Numérico
+  Descrição: A quantidade produzida por esta receita em suas proporções originais (ex: 1 bolo, 50 docinhos, 1000 gramas de chantilly).
+
+- Unidade de Rendimento
+  Tipo: Referência para Unidade
+  Descrição: A unidade do Rendimento Padrão (ex: UN, GR, Fatias).
+
+- Tempo de Preparo (Minutos)
+  Tipo: Numérico
+  Descrição: Estimativa do tempo ativo de preparo.
+
+- Tempo de Cozimento/Resfriamento (Minutos)
+  Tipo: Numérico
+  Descrição: Tempo adicional para processos passivos (forno, geladeira).
+
+- Custo da Receita
+  Tipo: Numérico (Monetário)
+  Descrição: Campo calculado automaticamente pela soma dos custos dos Itens de Receita. Fundamental para precificação.
+
+- Observações
+  Tipo: Texto Longo
+  Descrição: Campo para quaisquer notas, dicas ou variações da receita.
+
+### Item de Receita
+
+ Detalhar a quantidade específica de cada ingrediente que compõe uma receita, em suas respectivas unidades de medida para o preparo.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único do item de receita.
+
+- Receita (Chave Estrangeira)
+  Tipo: Referência para Receita
+  Descrição: Liga o item à sua receita principal.
+
+- Ingrediente (Chave Estrangeira)
+  Tipo: Referência para Ingrediente
+  Descrição: Liga o item ao ingrediente utilizado.
+
+- Quantidade
+  Tipo: Numérico
+  Descrição: A quantidade exata do ingrediente necessária para a receita.
+
+- Unidade
+  Tipo: Referência para Unidade
+  Descrição: A unidade em que o ingrediente é usado na receita (ex: GR, ML). Permite flexibilidade na receita sem exigir conversão manual.
+
+### Tipo de Produto
+
+Representa o item final que a confeiteira vende aos clientes. Um tipo de produto pode ser composto por uma ou mais receitas, kits ou variações.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único do tipo de produto.
+
+- Nome
+  Tipo: Texto
+  Descrição: Nome comercial do tipo de produto (ex: Bolo de Cenoura com Cobertura de Brigadeiro, Caixa de Brigadeiros Gourmet (12 und)).
+
+- Descrição
+  Tipo: Texto Longo
+  Descrição: Detalhes e características do tipo de produto.
+
+- Quantidade Máxima de Sabores
+  Tipo: Numérico
+  Descrição: Usado para tipos de produto customizáveis, como bolos.
+
+- Quantidade Mínima por Sabor
+  Tipo: Numérico
+  Descrição: Restrição para a composição de sabores.
+
+- Disponível para Venda
+  Tipo: Booleano
+  Descrição: Indica se o tipo de produto está ativo no catálogo.
+
+### Produto
+
+Permite definir diferentes tamanhos para um mesmo tipo de produto, cada um com seu próprio preço de venda.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único do produto.
+
+- Tipo de Produto (Chave Estrangeira)
+  Tipo: Referência para Tipo de Produto
+  Descrição: Liga o produto ao tipo de produto correspondente.
+
+- Nome do Produto
+  Tipo: Texto
+  Descrição: Nome ou descrição do produto (ex: Pequeno, Médio, Grande, 1kg, 20cm).
+
+- Preço de Venda
+  Tipo: Numérico (Monetário)
+  Descrição: Preço de venda para este produto específico.
+
+### Composição do Produto
+
+Detalha como um produto final é montado a partir de receitas ou outros sub-produtos, considerando o tamanho do produto. É crucial para calcular as necessidades de produção de receitas e, consequentemente, de ingredientes.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único da composição.
+
+- Tamanho do Produto (Chave Estrangeira)
+  Tipo: Referência para Tamanho do Produto
+  Descrição: Liga a composição ao tamanho específico do produto.
+
+- Receita/Sub-Produto (Chave Estrangeira)
+  Tipo: Referência para Receita ou Tipo de Produto
+  Descrição: Indica qual receita ou outro tipo de produto faz parte da composição (ex: Massa de Bolo de Baunilha, Recheio Brigadeiro Tradicional, Brigadeiro de Limão se for um kit de docinhos).
+
+- Quantidade Necessária
+  Tipo: Numérico
+  Descrição: A quantidade da receita/sub-produto necessária para montar o produto final.
+
+- Unidade de Medida
+  Tipo: Referência para Unidade
+  Descrição: Unidade da quantidade necessária (ex: KG de recheio, UN de massa de bolo, UN de brigadeiro).
+
+### Pedido
+
+Registrar as encomendas dos clientes, servindo como a fonte principal da demanda semanal que o aplicativo usará para dimensionar a produção e a compra de insumos.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único do pedido.
+
+- Data do Pedido
+  Tipo: Data/Hora
+  Descrição: Quando o pedido foi realizado. Preenchido automaticamente pelo sistema.
+
+- Data de Retirada
+  Tipo: Data/Hora
+  Descrição: Data programada para o cliente receber o produto.
+
+- Nome do Cliente
+  Tipo: Texto
+  Descrição: Nome completo do cliente.
+
+- Whatsapp do Cliente
+  Tipo: Texto
+  Descrição: Contato principal do cliente.
+
+- Tipo de Evento
+  Tipo: Texto
+  Descrição: Categoria do evento para o qual o pedido foi feito (ex: Aniversário, Casamento, Chá de Bebê, Corporativo).
+
+- Status do Pedido
+  Tipo: Enumeração
+  Descrição: Estado atual do pedido (ex: Pendente, Confirmado, Em Produção, Concluído, Cancelado).
+
+- Valor Total do Pedido
+  Tipo: Numérico (Monetário)
+  Descrição: Soma calculada dos Itens de Pedido.
+
+### Item de Pedido
+
+Detalhar quais produtos foram solicitados dentro de um Pedido e suas quantidades.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único do item.
+
+- Pedido (Chave Estrangeira)
+  Tipo: Referência para Pedido
+  Descrição: Liga ao pedido ao qual o item pertence.
+
+- Produto (Chave Estrangeira)
+  Tipo: Referência para Produto
+  Descrição: Liga ao tipo de produto específico pedido.
+
+- Quantidade
+  Tipo: Numérico
+  Descrição: Quantidade do produto específico pedida (ex: 1 bolo, 3 caixas de docinhos).
+
+- Preço Unitário na Venda
+  Tipo: Numérico (Monetário)
+  Descrição: O preço do produto no momento em que o pedido foi feito (útil para histórico de preços).
+
+### Subitem de Pedido
+
+ Registrar as especificidades e variações de produtos dentro de um Item de Pedido, como sabores de bolos ou tipos de docinhos em um kit.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único do subitem.
+
+- Item de Pedido (Chave Estrangeira)
+  Tipo: Referência para Item de Pedido
+  Descrição: Liga ao item do pedido que possui variações.
+
+- Sabor/Variação (Chave Estrangeira)
+  Tipo: Referência para Sabor
+  Descrição: Referência ao sabor cadastrado para o tipo de produto (ex: Chocolate Belga, Doce de Leite com Coco).
+
+- Quantidade
+  Tipo: Numérico
+  Descrição: A porção ou quantidade dessa variação dentro do Item de Pedido (ex: para um bolo de 2 sabores, pode ser 0.5 para cada; para uma caixa de doces, a quantidade de docinhos daquele sabor).
+
+### Sabor
+
+Permite cadastrar os sabores disponíveis para cada tipo de produto, possibilitando a customização de pedidos e produtos.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único do sabor.
+
+- Tipo de Produto (Chave Estrangeira)
+  Tipo: Referência para Tipo de Produto
+  Descrição: Liga o sabor ao tipo de produto correspondente (ex: bolo, docinho, torta).
+
+- Nome do Sabor
+  Tipo: Texto
+  Descrição: Nome do sabor (ex: Chocolate Belga, Doce de Leite, Limão, Morango, Sem Glúten).
+
+- Descrição
+  Tipo: Texto Longo
+  Descrição: Detalhes ou observações sobre o sabor, caso necessário.
+
+### Sabor do Produto
+
+Relaciona um sabor a um produto específico, permitindo definir um preço adicional para aquele sabor, caso aplicável.
+
+*Atributos*
+
+- Identificador (Chave Primária)
+  Tipo: Numérico/Texto
+  Descrição: Identificador único do registro de sabor do produto.
+
+- Produto (Chave Estrangeira)
+  Tipo: Referência para Produto
+  Descrição: Liga o sabor ao produto específico (ex: Bolo Pequeno, Caixa de Docinhos 12un).
+
+- Sabor (Chave Estrangeira)
+  Tipo: Referência para Sabor
+  Descrição: Liga ao sabor cadastrado para o tipo de produto.
+
+- Preço Adicional
+  Tipo: Numérico (Monetário)
+  Descrição: Valor adicional cobrado por esse sabor neste produto (pode ser zero).

@@ -1,0 +1,6 @@
+
+docker compose down
+docker build -t sweetmanager:latest .
+docker tag sweetmanager:latest paulopereirati1980/sweetmanager:latest
+docker push paulopereirati1980/sweetmanager:latest
+docker compose up --force-recreate

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paulo Ponciano - Java Python Javascript</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            filter: grayscale(100%);
+        }
+        .header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            color: #333;
+        }
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+        }
+        a, a:visited {
+            text-decoration: none;
+            color: inherit;
+            margin-right: 0.5em;
+        }
+        .nowrap{
+            white-space: nowrap;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background: #333;
+            color: #fff;
+            margin-top: 20px;
+        }
+        @media print {
+            .container {
+                box-shadow: none;
+                margin-top: 0;
+            }
+            footer {
+                position: static;
+                padding: 5px 0;
+            }
+            a, a:visited , a:hover {
+                text-decoration: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% for report_item in report_items %}
+    <div class="container">
+    
+        <div class="header row">
+            <div class="col-sm-2">
+                <img src="img/paulo-ponciano-150-150.png" alt="Paulo Ponciano" class="profile-photo">
+            </div>
+            <div class="col-sm-auto">
+                 <h1>{{report_item.title}}</h1>
+                <section>
+                    
+                    <i>Empresa: {{company_name}}</i>
+                </section>
+                <section>
+                    
+                    <i>Gerado em: {{generation_date}}</i>
+                </section>
+                <br/>
+                
+            </div>
+        </div>
+        
+        <div class="row">
+            
+            <div class="col-sm-12">
+                <h3>Resumo de Receitas</h3>
+                {% for recipe_resume in report_item.recipe_resumes %}
+               
+                <session>
+                    <h4>{{recipe_resume.title}}</h4>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                            <th>Receita</th>
+                            <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recipe_resume_item in recipe_resume.items %}
+                             
+                            <tr>
+                                <td>{{recipe_resume_item.name}}</td>
+                                <td>{{recipe_resume_item.quantity}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td><strong>{{recipe_resume.total.quantity}}</strong></td>
+                            </tr>
+                    </table>
+                </session>
+                {% endfor %}
+                
+                <h3>Preparos</h3>
+                <section>
+                    <h4>Formas</h4>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                            <th>Sabor</th>
+                            <th>Tamanho</th>
+                            <th>Formato</th>
+                            <th>Qtd Formas</th>
+                            <th>Massa Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>Baunilha</td>
+                                <td>G</td>
+                                <td>Redondo</td>
+                                <td>3</td>
+                                <td>2400g</td>
+                            </tr>
+
+                            <tr>
+                                <td>Baunilha</td>
+                                <td>G</td>
+                                <td>Redondo</td>
+                                <td>3</td>
+                                <td>2400g</td>
+                            </tr>
+
+                            <tr>
+                                <td>Baunilha</td>
+                                <td>G</td>
+                                <td>Redondo</td>
+                                <td>3</td>
+                                <td>2400g</td>
+                            </tr>
+
+                            <tr>
+                                <td>Baunilha</td>
+                                <td>G</td>
+                                <td>Redondo</td>
+                                <td>3</td>
+                                <td>2400g</td>
+                            </tr>
+
+                            <tr>
+                                <td>Baunilha</td>
+                                <td>G</td>
+                                <td>Redondo</td>
+                                <td>3</td>
+                                <td>2400g</td>
+                            </tr>
+
+                            <tr>
+                                <td>Baunilha</td>
+                                <td>G</td>
+                                <td>Redondo</td>
+                                <td>3</td>
+                                <td>2400g</td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <footer>
+        <p>&copy; 2025 | <a href="http://www.dwmaker.com.br"> www.dwmaker.com.br</a></p>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

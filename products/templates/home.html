@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Página Inicial - Meu Site{% endblock %}
+
+{% block content %}
+    <div class="container my-4">
+        <h3>Receitas</h3>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for recipe in recipes %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-header">🥄 {{recipe.name}} - {{recipe.measure_quantity}}{{recipe.measure_unit}}</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Ingredientes:</h5>
+                        {% for recipe_ingredient in recipe.recipe_ingredients%}
+                        <p class="card-text">🍒 {{recipe_ingredient.ingredient.name}} - {{recipe_ingredient.measure_quantity}}{{recipe_ingredient.measure_unit}}</p>
+                        {% endfor %}
+                        <a href="admin/products/recipe/{{recipe.id}}/change/" class="card-link" target="admin">Abrir</a>
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+
+     <div class="container my-4">
+        <h3>Fichas Técnicas</h3>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for datasheet in datasheets %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-header">🎂 {{ datasheet.product }} - {{ datasheet.flavor }} </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Receitas:</h5>
+                        {% for recipe in datasheet.recipes %}
+                        <p class="card-text">🥄 
+                    
+                            {{ recipe.baking_pan|default:"" }} X {{ recipe.multiple }} - {{ recipe.recipe }} - {{ recipe.measure_quantity }}{{ recipe.measure_unit }}
+
+                        </p>
+                        {% endfor %}
+                        
+                        
+                        <a href="admin/products/productdatasheet/{{datasheet.id}}/change/" class="card-link" target="admin">Abrir</a>
+                    </div>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+
+    {% endblock %}
+

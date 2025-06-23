@@ -1,0 +1,11 @@
+Django==5.2.2
+django-extensions==4.1
+djangorestframework==3.16.0
+inflection==0.5.1
+uritemplate==4.2.0
+pyyaml==6.0.2
+pandas==2.3.0
+openpyxl==3.1.5
+dj-database-url==3.0.0
+python-decouple==3.8
+psycopg==3.2.9

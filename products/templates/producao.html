@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %}Página Inicial - Meu Site{% endblock %}
+{% load static %}
+{% block content %}
+<div class="card d-print-none" >
+    <div class="card-header">Produção</div>
+    <div class="card-body">
+        <h5 class="card-title">Selecione o período de produção</h5>
+
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-auto">
+                <label for="{{ form.begin_date.id_for_label }}">Data Início </label>
+                
+                {{ form.begin_date }}
+                {% if form.begin_date.errors %}
+                <ul class="errorlist text-danger">
+                    {% for error in form.begin_date.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <label for="{{ form.end_date.id_for_label }}">Data Fim </label>
+                <br>
+                {{ form.end_date }}
+                {% if form.end_date.errors %}
+                    <ul class="errorlist text-danger">
+                        {% for error in form.end_date.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <br>
+                <button class="btn btn-primary" type="submit" name="action" id="action">Consultar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<br class="d-print-none">
+{% for message in report.messages %}
+<div class="alert alert-{{message.type}}" role="alert">
+{{message.detail}} <a href="{{message.url}}" class="alert-link" target="admin">Cadastrar</a>
+</div>
+{% endfor %}
+
+{%if report%}
+
+<div class="container">
+    <div class="header row">
+        <div class="col-sm-3 ">
+            <img src="{% static "img/logo_dolce_stupendo.png" %}" alt="Logo {{ report.company_name }}" style="height: 120px;">
+        </div>
+        <div class="col-sm-9">
+            <h3>{{ report.title }}</h3>
+           
+            <i>Empresa: {{ report.company_name }}</i><br>
+            <i>Gerado em: {{ report.generation_date }}</i>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h4>Resumo de Receitas</h4>
+            {% for recipe_resume in report.recipe_by_category %}
+            <section>
+                <h5>{{ recipe_resume.datasheet_recipe_category_name }}</h5>
+                <table class="table table-bordered table-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="col-8">Receita</th>
+                            <th class="col-4">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recipe_resume_item in recipe_resume.items %}
+                        <tr>
+                            <td>{{ recipe_resume_item.datasheet_recipe_name }}</td>
+                            <td>{{ recipe_resume_item.production_weight }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+            {% endfor %}
+
+            <h4>Preparos</h4>
+            <section>
+                <h5>Formas</h5>
+                <table class="table table-bordered table-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="col-4">Sabor</th>
+                            <th class="col-2">Formato</th>
+                            <th class="col-2">Peso Unitário</th>
+                            <th class="col-2">Qtd Formas</th>
+                            <th class="col-2">Massa Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in report.recipes_by_bakingpan %}
+                        <tr>
+                            <td>{{ item.datasheet_recipe_name }}</td>
+                            <td>{{ item.datasheet_bakingpan_name }}</td>
+                            <td>{{ item.datasheet_weigth }}</td>
+                            <td>{{ item.sum_production_quantity }}</td>
+                            <td>{{ item.sum_production_weigth }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+{% endif %}
+{% endblock %}

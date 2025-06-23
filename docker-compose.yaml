@@ -1,0 +1,59 @@
+services:
+# Cria o ambiente web utilizando o localhost na porta 8000
+# Também informa a pasta onde está o código do app
+# E adiciona a dependência do serviço db
+  web:
+    image: paulopereirati1980/sweetmanager:latest
+    container_name: sweetmanager
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+    init: true
+    # env_file: ./.env  # Uncomment if .env file exists
+    environment:
+      - SECRET_KEY=(MinhaChaveSuperSecreta514789536)
+      - DEBUG=True
+      - ALLOWED_HOSTS=*
+      - DATABASE_URL=postgres://postgres:postgres@postgres/sweetmanager
+      - LANGUAGE_CODE=pt-br
+      - TIME_ZONE=America/Sao_Paulo
+      - STATIC_ROOT=/static
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_EMAIL=admin@sweetmanager.com.br
+      - DJANGO_SUPERUSER_PASSWORD=changemeplease
+    # Expose the default Django port
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    # Add a comment for static/media if needed
+    #volumes:
+    #  - .:/app
+    #   - ./static:/app/static
+    #   - ./media:/app/media
+
+# Observação: O Django utiliza nativamente o SQLite
+# como banco de dados. Portanto, após criado o
+# projeto, será necessário alterar o arquivo
+# de configuração de SQLite para Postgres
+# Seleciona o banco de dados Postgres
+# Também informa as variáveis de ambiente
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+        POSTGRES_DB: sweetmanager
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default
+    ports:
+      - "5432:5432"
+volumes:
+  pgdata:
